@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 
-const API_BASE = 'https://app-ocm20-obe-dev-001-dgd8hbbyeyc2d2fv.eastus2-01.azurewebsites.net//';
+const API_BASE = 'https://app-ka-sandbox-001.azurewebsites.net/';
 
 const Header = () => {
   const { logoutUser, user } = useAuth();
