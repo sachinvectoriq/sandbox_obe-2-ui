@@ -137,14 +137,16 @@ export const submitFeedback = createAsyncThunk(
 
     console.log('Submitting feedback payload:', payload);
 
-    try {
-      await apiClient.post('/api/feedback/submit', payload);
-      return { messageId, type };
-    } catch (error) {
-      console.error('Feedback submission failed:', error.response?.data || error.message);
-      return rejectWithValue(error.response?.data || error.message);
-    }
+    //try {
+     // await apiClient.post('/api/feedback/submit', payload);
+      //return { messageId, type };
+    //} catch (error) {
+      //console.error('Feedback submission failed:', error.response?.data || error.message);
+      //return rejectWithValue(error.response?.data || error.message);
+    //}
+    return { messageId, type };
   }
+  
 );
 
 
@@ -341,7 +343,7 @@ export const sendQuestionToAPI = createAsyncThunk(
         // ════════════════════════════════════════════════════════════════════
         // Audit logging
         // ════════════════════════════════════════════════════════════════════
-        try {
+        /*try {
           const currentFilters = getState().chat.filters;
 
           const logPayload = {
@@ -360,7 +362,7 @@ export const sendQuestionToAPI = createAsyncThunk(
           console.log('Audit log success');
         } catch (logError) {
           console.error('Audit log failed:', logError.response?.data || logError.message);
-        }
+        }*/
 
       } else {
         throw new Error('Invalid OBEKA API response structure: missing answer field.');
