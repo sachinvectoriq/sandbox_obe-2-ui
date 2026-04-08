@@ -131,11 +131,15 @@ const Report = () => {
     setError(null);
     try {
       const params = buildParams({ limit: ITEMS_PER_PAGE, offset: newOffset });
-      const res = await apiClient.get(`/api/report/all?${params}`);
+      /*const res = await apiClient.get(`/api/report/all?${params}`);
       const rows = res.data?.data || [];
       setTableData(newOffset === 0 ? rows : (prev) => [...prev, ...rows]);
       setHasMore(rows.length === ITEMS_PER_PAGE);
       setOffset(newOffset);
+      setIsFiltered(false);*/
+      // 🚫 Report API disabled
+      setTableData([]);
+      setHasMore(false);
       setIsFiltered(false);
     } catch (e) {
       setError(e?.response?.data?.detail?.[0]?.msg || e.message || 'Failed to load data');
@@ -159,8 +163,11 @@ const Report = () => {
         limit:         ITEMS_PER_PAGE,
         offset:        newOffset,
       });
-      const res = await apiClient.get(`/api/report/filter?${params}`);
-const rows = res.data?.data || [];
+      //const res = await apiClient.get(`/api/report/filter?${params}`);
+//const rows = res.data?.data || [];
+// 🚫 Report filter API disabled
+const rows = [];
+
 
 // Build summary manually from rows
 const thumbsUp = rows.filter(r => r.feedback_type === 'thumbs_up').length;
@@ -195,8 +202,9 @@ setSummaryData({
         feedback_type: selectedFeedbackType || undefined,
         user_name:     selectedUser         || undefined,
       });
-      const res = await apiClient.get(`/api/report/filter?${params}`);
-      setSummaryData(res.data);
+      //const res = await apiClient.get(`/api/report/filter?${params}`);
+      //setSummaryData(res.data);
+      setSummaryData(null);
     } catch (e) {
       console.error('Summary fetch failed:', e);
       setSummaryData(null);
