@@ -343,7 +343,7 @@ export const sendQuestionToAPI = createAsyncThunk(
         // ════════════════════════════════════════════════════════════════════
         // Audit logging
         // ════════════════════════════════════════════════════════════════════
-        /*try {
+        try {
           const currentFilters = getState().chat.filters;
 
           const logPayload = {
@@ -362,7 +362,7 @@ export const sendQuestionToAPI = createAsyncThunk(
           console.log('Audit log success');
         } catch (logError) {
           console.error('Audit log failed:', logError.response?.data || logError.message);
-        }*/
+        }
 
       } else {
         throw new Error('Invalid OBEKA API response structure: missing answer field.');
