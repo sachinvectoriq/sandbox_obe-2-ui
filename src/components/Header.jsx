@@ -116,7 +116,7 @@ const Header = () => {
       <div className="container p-4 w-[95%] max-w-[1400px] mx-auto flex justify-between items-center">
         <Logo />
         <h1 className="text-3xl font-semibold text-[#fcbc19]">
-          OBE Knowledge Assistant
+          OBE Knowledge Assistant Sandbox
         </h1>
 
         <div className="flex items-center gap-4">
