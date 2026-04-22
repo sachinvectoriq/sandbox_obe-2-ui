@@ -345,11 +345,13 @@ export const sendQuestionToAPI = createAsyncThunk(
         // ════════════════════════════════════════════════════════════════════
         try {
           const currentFilters = getState().chat.filters;
+           const jobTitle = getState().auth?.user?.job_title || '';
 
           const logPayload = {
             chat_session_id: sessionId,
             user_id: userId,
             user_name: userName,
+            job_title: jobTitle,
             opco: currentFilters?.opco_values?.[0] || '',
             persona: currentFilters?.persona_values?.[0] || '',
             query: question,
