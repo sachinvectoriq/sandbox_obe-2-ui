@@ -34,8 +34,8 @@ const ReportAccessManagement = () => {
       const data = response.data;
       if (Array.isArray(data)) {
         setAccessUsers(data);
-      } else if (data?.records) {
-        setAccessUsers(data.records);
+      } else if (Array.isArray(data?.data)) {
+  setAccessUsers(data.data); 
       } else {
         setAccessUsers([]);
       }
@@ -208,7 +208,7 @@ const ReportAccessManagement = () => {
                       {user.provider_name || user.granted_by || '—'}
                     </td>
                     <td className="py-4 px-5 text-gray-600 text-sm">
-                      {formatDate(user.permission_granted_at || user.created_at)}
+                      {formatDate(user.timestamp_utc || user.permission_granted_at || user.created_at)}
                     </td>
                     <td className="py-4 px-5 text-center">
                       <button
