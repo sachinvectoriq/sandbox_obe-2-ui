@@ -390,8 +390,8 @@ const Report = () => {
                   className="w-full border border-gray-300 rounded-md px-2.5 py-1.5 text-sm focus:ring-1 focus:ring-[#174a7e] focus:border-[#174a7e] outline-none"
                 >
                   <option value="">All Types</option>
-                  <option value="thumbs_up">👍 Thumbs Up</option>
-                  <option value="thumbs_down">👎 Thumbs Down</option>
+                  <option value="thumbs_up">Thumbs Up</option>
+                  <option value="thumbs_down">Thumbs Down</option>
                 </select>
               </div>
 
