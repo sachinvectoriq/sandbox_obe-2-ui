@@ -6,7 +6,7 @@ import {
   ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import Header from '../components/Header';
-import apiClient from '../services/apiClient';
+import apiClient from '../services/apiClient'; 
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -50,6 +50,7 @@ const LOG_COLUMNS = [
   { key: 'query',         label: 'Query',         width: 'w-48' },
   { key: 'ai_response',   label: 'AI Response',   width: 'w-64' },
   { key: 'citations',     label: 'Citations',     width: 'w-40' },
+  { key: 'feedback_type', label: 'Feedback',      width: 'w-28' },
   { key: 'feedback',      label: 'Feedback Note', width: 'w-40' },
 ];
 
@@ -99,8 +100,9 @@ const Report = () => {
   const [fromDate,      setFromDate]      = useState(minus30Str());
   const [toDate,        setToDate]        = useState(todayStr());
   const [selectedUser,  setSelectedUser]  = useState('');
-  const [selectedOpco,  setSelectedOpco]  = useState('');
-  const [selectedPersona, setSelectedPersona] = useState('');
+  const [selectedOpco,         setSelectedOpco]         = useState('');
+  const [selectedPersona,      setSelectedPersona]      = useState('');
+  const [selectedFeedbackType, setSelectedFeedbackType] = useState('');
 
   // ── Data state ────────────────────────────────────────────────────────────
   const [tableData,    setTableData]    = useState([]);
@@ -144,9 +146,10 @@ const Report = () => {
       const params = buildParams({
         start_date: fromDate,
         end_date:   toDate,
-        user_name:  selectedUser   || undefined,
-        persona:    selectedPersona || undefined,
-        opco:       selectedOpco   || undefined,
+        user_name:  selectedUser         || undefined,
+        persona:    selectedPersona      || undefined,
+        opco:       selectedOpco         || undefined,
+        feedback_type: selectedFeedbackType || undefined,
         limit:      ITEMS_PER_PAGE,
         offset:     newOffset,
       });
@@ -166,7 +169,7 @@ const Report = () => {
     } finally {
       setLoading(false);
     }
-  }, [fromDate, toDate, selectedUser, selectedPersona, selectedOpco]);
+  }, [fromDate, toDate, selectedUser, selectedPersona, selectedOpco, selectedFeedbackType]);
 
   // ── Initial load ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -186,6 +189,7 @@ const Report = () => {
     setSelectedUser('');
     setSelectedOpco('');
     setSelectedPersona('');
+    setSelectedFeedbackType('');
     setFromDate(minus30Str());
     setToDate(todayStr());
     setOffset(0);
@@ -284,7 +288,7 @@ const Report = () => {
 
           {/* ── Filter panel ─────────────────────────────────────────────── */}
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8 gap-3 items-end">
 
               {/* Search (client-side across loaded rows) */}
               <div className="xl:col-span-1">
@@ -375,6 +379,22 @@ const Report = () => {
                 </select>
               </div>
 
+              {/* Feedback Type */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                  <Filter size={11} className="inline mr-1" />Feedback
+                </label>
+                <select
+                  value={selectedFeedbackType}
+                  onChange={(e) => setSelectedFeedbackType(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-2.5 py-1.5 text-sm focus:ring-1 focus:ring-[#174a7e] focus:border-[#174a7e] outline-none"
+                >
+                  <option value="">All Types</option>
+                  <option value="thumbs_up">👍 Thumbs Up</option>
+                  <option value="thumbs_down">👎 Thumbs Down</option>
+                </select>
+              </div>
+
               {/* Action buttons */}
               <div className="flex gap-2">
                 <button
@@ -460,6 +480,19 @@ const Report = () => {
                           <td key={col.key} className={`${col.width} px-3 py-2.5 text-gray-800 align-top`}>
                             {col.key === 'date_and_time' ? (
                               <span className="whitespace-nowrap text-xs">{formatDateTime(row[col.key])}</span>
+                            ) : col.key === 'feedback_type' ? (
+                              <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                ${row[col.key] === 'thumbs_up'
+                                  ? 'bg-green-100 text-green-700'
+                                  : row[col.key] === 'thumbs_down'
+                                  ? 'bg-red-100 text-red-700'
+                                  : 'bg-gray-100 text-gray-500'}`}>
+                                {row[col.key] === 'thumbs_up'
+                                  ? '👍 Good'
+                                  : row[col.key] === 'thumbs_down'
+                                  ? '👎 Bad'
+                                  : row[col.key] ?? '—'}
+                              </span>
                             ) : (col.key === 'ai_response' || col.key === 'query' || col.key === 'citations') ? (
                               <span title={row[col.key] ?? ''} className="text-xs">
                                 {truncate(row[col.key])}
