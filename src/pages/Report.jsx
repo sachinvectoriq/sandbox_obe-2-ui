@@ -120,7 +120,7 @@ const Report = () => {
     try {
       const res = await apiClient.get('/api/audit-report/users');
       // Response may be a plain array or { data: [...] } — handle both
-      const users = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      const users = res.data?.users || [];
       setDistinctUsers(users);
     } catch (err) {
       console.error('Failed to fetch distinct users:', err);
