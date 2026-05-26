@@ -137,8 +137,8 @@ const formatMessageContent = (content, citationsMap) => {
         const listType = isOrderedListItem ? 'ol' : 'ul';
         const listClass =
           listType === 'ol'
-            ? 'list-decimal list-outside pl-6 my-2 space-y-1'
-            : 'list-disc list-outside pl-6 my-2 space-y-1';
+            ? 'list-decimal list-outside pl-6 my-1 space-y-0'
+            : 'list-disc list-outside pl-6 my-1 space-y-0';
         processedLines.push(
           `<${listType} class="${listClass}" style="list-style-type: ${
             listType === 'ol' ? 'decimal' : 'disc'
@@ -155,7 +155,7 @@ const formatMessageContent = (content, citationsMap) => {
       }
 
       processedLines.push(
-        `<li class="text-base leading-6 text-gray-800">${listItemContent}</li>`
+        `<li class="text-base leading-6 text-gray-800 my-0">${listItemContent}</li>`
       );
     } else {
       closeLists(currentIndent);
@@ -194,20 +194,27 @@ const formatMessageContent = (content, citationsMap) => {
   formatted = formatted
     .split(/\n\s*\n/)
     .map((block) => {
-      block = block.trim();
-      if (block === '') return '';
+  block = block.trim();
+  if (block === '') return '';
 
-      const startsWithPlaceholder = block.match(/^__HTML_PLACEHOLDER_\d+__/);
-      if (
-        startsWithPlaceholder &&
-        placeholderMap.has(startsWithPlaceholder[0])
-      ) {
-        return block;
-      }
+  // Don't wrap list or existing block HTML in <p>
+  if (block.includes('__HTML_PLACEHOLDER_') &&
+      /<\/(ul|ol|li|p)>/.test(
+        [...placeholderMap.entries()]
+          .filter(([k]) => block.includes(k))
+          .map(([,v]) => v).join('')
+      )) {
+    return block;
+  }
 
-      block = block.replace(/\n/g, '<br/>');
-      return `<p class="text-base leading-7 text-gray-800 my-2">${block}</p>`;
-    })
+  const startsWithPlaceholder = block.match(/^__HTML_PLACEHOLDER_\d+__/);
+  if (startsWithPlaceholder && placeholderMap.has(startsWithPlaceholder[0])) {
+    return block;
+  }
+
+  block = block.replace(/\n/g, '<br/>');
+  return `<p class="text-base leading-7 text-gray-800 my-2">${block}</p>`;
+})
     .join('');
 
   placeholderMap.forEach((value, key) => {
@@ -589,10 +596,10 @@ const isAdmin = authState.user?.group === 'admin';
                           [&>ol]:list-outside
                           [&>ul]:pl-6
                           [&>ol]:pl-6
-                          [&>ul]:my-2
-                          [&>ol]:my-2
-                          [&>ul]:space-y-1
-                          [&>ol]:space-y-1
+                          [&>ul]:my-1
+                          [&>ol]:my-1
+                          [&>ul]:space-y-0
+                          [&>ol]:space-y-0
                           [&>li]:text-base
                           [&>li]:leading-6
                           [&>li]:text-gray-800
