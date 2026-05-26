@@ -24,6 +24,18 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Consolas', 'monospace'],
       },
+      keyframes: {
+        heartbeat: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '14%': { transform: 'scale(1.4)', opacity: '1' },
+          '28%': { transform: 'scale(1)', opacity: '1' },
+          '42%': { transform: 'scale(1.3)', opacity: '0.8' },
+          '70%': { transform: 'scale(1)', opacity: '1' },
+        },
+      },
+      animation: {
+        heartbeat: 'heartbeat 1.2s ease-in-out infinite',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
