@@ -522,7 +522,14 @@ const isAdmin = authState.user?.group === 'admin';
               }`}
             >
               <div className='flex justify-between items-start mb-2'>
-                <Sparkles size={16} className='text-blue-500 mt-1' />
+                <Sparkles
+  size={16}
+  className={`text-blue-500 mt-1 ${
+    message.id === pendingMessageId && message.content === '...'
+      ? 'animate-[heartbeat_1.2s_ease-in-out_infinite]'
+      : ''
+  }`}
+/>
                 <div className='flex items-center gap-3'>
                   <div className='flex gap-1'>
                     {/* ✅ Thumbs up button — disabled after any feedback submitted */}
