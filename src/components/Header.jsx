@@ -27,8 +27,8 @@ const Header = () => {
   const getText = (key) => {
     const translations = {
       title: {
-        en: 'Evolve Knowledge Assistant',
-        fr: 'Assistant de Connaissances Evolve'
+        en: 'Sandbox',
+        fr: 'Sandbox'
       },
       home: {
         en: 'Home',

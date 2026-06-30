@@ -6,7 +6,7 @@ import {  Users } from 'lucide-react';
 import Header from '../components/Header';
 import ReportAccessManagement from '../components/ReportAccessManagement';
 
-const API_BASE = 'https://app-azuresearch-qa-evolve.azurewebsites.net';
+const API_BASE = 'https://app-ka-sandbox-001.azurewebsites.net';
 
 const SettingPage = () => {
   const navigate = useNavigate();
