@@ -15,7 +15,7 @@ const ChatLayout = ({ children }) => {
   return (
     <div
       id='chat_layout'
-      className={`container h-[58vh] mx-auto flex transition-all duration-300 ${
+      className={`container h-[70vh] mx-auto flex transition-all duration-300 ${
         previewDocURL ? 'max-w-[95%]' : 'max-w-[1000px]'
       }`}
     >

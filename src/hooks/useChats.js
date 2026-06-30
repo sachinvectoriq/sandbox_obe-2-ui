@@ -1,4 +1,3 @@
-//src\hooks\useChats.js
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addMessage,

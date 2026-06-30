@@ -1,16 +1,5 @@
 {
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": [
-      "/assets/*",
-      "/*.css",
-      "/*.js",
-      "/*.png",
-      "/*.jpg",
-      "/*.svg",
-      "/*.ico",
-      "/*.webp",
-      "/*.mp4"
-    ]
-  }
+    "navigationFallback": {
+        "rewrite": "index.html"
+    }
 }

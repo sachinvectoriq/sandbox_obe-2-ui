@@ -1,8 +1,8 @@
 // src/pages/QuickTour.jsx
 import React from 'react';
 import Header from '../components/Header';
-import Assistant from '../assets/OBE Knowledge Assistant.mp4';
-import VideoThumbnail from '../assets/Thumbnail.png'; 
+import Assistant from '../assets/EVOLVE Knowledge Assistant.mp4';
+import VideoThumbnail from '../assets/Thumbnail.jpg'; 
 
 const QuickTour = () => {
   return (
@@ -37,7 +37,7 @@ const QuickTour = () => {
         {/* Additional Information */}
         <div className="max-w-5xl w-full mt-8 text-center">
           <p className="text-gray-600 text-lg">
-            Learn how to use the OBE Knowledge Assistant with this comprehensive quick tour.
+            Learn how to use the Evolve Knowledge Assistant with this comprehensive quick tour.
           </p>
         </div>
       </div>

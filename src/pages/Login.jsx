@@ -19,7 +19,7 @@ const Login = () => {
     //   localStorage.clear();
     //   window.location.href =
     //     import.meta.env.VITE_LOGIN_URI ||
-    //     'https://qa-azure-search.azurewebsites.net/saml/login';
+    //     'https://app-ka-sandbox-001.azurewebsites.net/saml/login';
     // }
 
     // ✅ HARDCODED USER FOR LOCAL DEVELOPMENT

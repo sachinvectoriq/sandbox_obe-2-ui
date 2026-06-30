@@ -26,12 +26,13 @@ const Home = () => {
     dispatch(setPreviewDocURL({ url }));
   };
 
+  
+
   useEffect(() => {
-    // ✅ Simplified check - works with hardcoded user
     if (!user || !user?.name || !user?.group) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user]);
 
   return (
     <div id='main_app'>
@@ -51,17 +52,15 @@ const Home = () => {
             </div>
           ) : (
             <div className='flex h-[85vh] flex-col bg-[#f3f5f8] rounded-md border border-gray-200'>
-              <div
-                className={`flex h-full flex-col pt-4 transition-all duration-300`}
-              >
-                <ChatLayout>
-                  <ChatContent onViewPdf={handleViewPdf} />
-                </ChatLayout>
-                <div className='flex w-full mt-4 justify-center items-center absolute bottom-2'>
-                  <ChatForm />
-                </div>
-              </div>
-            </div>
+  <div className={`flex h-full flex-col pt-4 transition-all duration-300`}>
+    <ChatLayout>
+      <ChatContent onViewPdf={handleViewPdf} />
+    </ChatLayout>
+    <div className='flex w-full mt-4 justify-center items-center absolute bottom-2'>
+      <ChatForm />
+    </div>
+  </div>
+</div>
           )}
         </motion.div>
         {/* Right Sticky PDF Viewer */}

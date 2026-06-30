@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Users } from 'lucide-react';
+import {  Users } from 'lucide-react';
 import Header from '../components/Header';
 import ReportAccessManagement from '../components/ReportAccessManagement';
 
-const API_BASE = 'https://app-ka-sandbox-001.azurewebsites.net/';
+const API_BASE = 'https://app-azuresearch-qa-evolve.azurewebsites.net';
 
 const SettingPage = () => {
   const navigate = useNavigate();
@@ -34,7 +34,12 @@ const SettingPage = () => {
   // --- ADMIN ACCESS CHECK ---
  
 
-  const [activeSection, setActiveSection] = useState('general');
+  const [activeSection, setActiveSection] = useState('access');
+
+  const handleSectionChange = (sectionId) => {
+  setError(null);
+  setActiveSection(sectionId);
+};
 
   const [formData, setFormData] = useState({
     azure_search_endpoint: '',
@@ -57,27 +62,24 @@ const SettingPage = () => {
   const [openaiEdit, setOpenaiEdit] = useState(false);
   const [semanticEdit, setSemanticEdit] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   // Fetch settings from API only if user is admin
-  useEffect(() => {
-    const adminId = user?.group === 'admin' ? user?.admin_id : null;
-
-    fetch(`${API_BASE}/get_settings`)
-      .then(res => {
-        if (!res.ok) throw new Error(`Failed to fetch settings: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        setFormData(data);
-        setOriginalData(data);
-      })
-      .catch(err => setError(err.message))
-      .finally(() => setIsLoading(false));
-  }, [user]);
-
+ // useEffect(() => {
+//   fetch(`${API_BASE}/get_settings`)
+//     .then(res => {
+//       if (!res.ok) throw new Error(`Failed to fetch settings: ${res.status}`);
+//       return res.json();
+//     })
+//     .then(data => {
+//       setFormData(data);
+//       setOriginalData(data);
+//     })
+//     .catch(err => setError(err.message))
+//     .finally(() => setIsLoading(false));
+// }, [user]);
   const updateField = (field, value) =>
     setFormData(prev => ({ ...prev, [field]: value }));
 
@@ -147,10 +149,15 @@ const SettingPage = () => {
 
   
 
-  const menuItems = [
+  {/* const menuItems = [
     { id: 'general', label: 'General Settings', icon: Settings },
     { id: 'access', label: 'Access Management', icon: Users }
-  ];
+  ];*/}
+
+
+  const menuItems = [
+  { id: 'access', label: 'Access Management', icon: Users }
+];
 
   return (
     <div className="min-h-screen bg-[#f7f9fc]">
@@ -167,7 +174,7 @@ const SettingPage = () => {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveSection(item.id)}
+                    onClick={() => handleSectionChange(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                       isActive ? 'bg-[#174a7e] text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'
                     }`}

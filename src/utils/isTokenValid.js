@@ -1,4 +1,3 @@
-//src\utils\isTokenValid.js
 import { jwtDecode } from 'jwt-decode';
 
 export const isTokenValid = (token) => {

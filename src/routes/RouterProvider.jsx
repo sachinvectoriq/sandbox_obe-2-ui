@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import Dashboard from '../pages/Dashboard';
-import SettingPage2 from '../pages/SettingPage2';
+import SettingPage from '../pages/SettingPage';
 import QuickTour from '../pages/QuickTour'
 import Report from '../pages/Report';
 import Home from '../pages/Home';
@@ -17,7 +17,7 @@ const RouterProvider = () => {
         <Route path='/' element={<App />}>
           <Route path='home' element={<Home />} />
           <Route path='dashboard' element={<Dashboard />} />
-          <Route path='settings2' element={<SettingPage2 />} />
+          <Route path='settings' element={<SettingPage />} />
           <Route path='quick-tour' element={<QuickTour />} />
           <Route
             path='reports'

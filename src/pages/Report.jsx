@@ -11,34 +11,38 @@ import apiClient from '../services/apiClient';
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
-const ITEMS_PER_PAGE = 100;
+const ITEMS_PER_PAGE = 10000;
 
 const OPCO_OPTIONS = [
   { value: '',                         label: 'All OPCOs' },
-  { value: 'allegiscorporateservices', label: 'Allegis Corporate Services' },
-  { value: 'actalent',                 label: 'Actalent' },
-  { value: 'aerotek',                  label: 'Aerotek' },
-  { value: 'actalentservices',         label: 'Actalent Services' },
-  { value: 'aerotekservices',          label: 'Aerotek Services' },
-  { value: 'astoncarter',              label: 'Aston Carter' },
-  { value: 'teksystems',               label: 'TekSystems' },
-  { value: 'tekglobalservices',        label: 'Tek Global Services' },
-  { value: 'tgs',                      label: 'TGS' },
+  //{ value: 'allegiscorporateservices', label: 'Allegis Corporate Services' },
+  //{ value: 'actalent',                 label: 'Actalent' },
+  //{ value: 'aerotek',                  label: 'Aerotek' },
+  //{ value: 'actalentservices',         label: 'Actalent Services' },
+  //{ value: 'aerotekservices',          label: 'Aerotek Services' },
+  //{ value: 'astoncarter',              label: 'Aston Carter' },
+  //{ value: 'teksystems',               label: 'TekSystems' },
+  //{ value: 'tekglobalservices',        label: 'Tek Global Services' },
+  //{ value: 'tgs',                      label: 'TGS' },
+  { value: 'tektgsna', label: 'TEK/TGS NA' },
+  { value: 'acs', label: 'ACS' },
 ];
 
 const PERSONA_OPTIONS = [
-  { value: '',                label: 'All Personas' },
-  { value: 'fsg',             label: 'FSG' },
-  { value: 'front_office',    label: 'Front Office' },
-  { value: 'producer',        label: 'Producer' },
-  { value: 'osg',             label: 'OSG' },
-  { value: 'back_office',     label: 'Back Office' },
-  { value: 'support',         label: 'Support' },
-  { value: 'support_services',label: 'Support Services' },
-  { value: 'shared_service',  label: 'Shared Service' },
-  { value: 'shared_services', label: 'Shared Services' },
-  { value: 'onboarding',      label: 'Onboarding' },
-  { value: 'producers',       label: 'Producers' },
+  { value: "tektalentdeliverymspleadomem", label: "TEK Talent Delivery/MSP Lead/OM/EM" },
+  { value: "tgsrecruiter", label: "TGS Recruiter" },
+  { value: "tgsdelivery", label: "TGS Delivery" },
+  { value: "teksalesmspdirectors", label: "TEK Sales/MSP Directors" },
+  { value: "tgssales", label: "TGS Sales" },
+  { value: "accountingoperations", label: "Accounting Operations" },
+  { value: "backoffice", label: "Back Office" },
+  { value: "corporate", label: "Corporate" },
+  { value: "fieldsupportgroup", label: "Field Support Group" },
+  { value: "frontoffice", label: "Front Office" },
+  { value: "operationalriskcompliance", label: "Operational Risk & Compliance" },
+  { value: "externalusers", label: "External Users" },
+  { value: "employeeselfservice", label: "Employee Self-Service" },
+  { value: "supervisormanagerleaderselfservice", label: "Supervisor/Manager/Leader Self-Service" },
 ];
 
 const LOG_COLUMNS = [
@@ -46,6 +50,7 @@ const LOG_COLUMNS = [
   { key: 'job_title',     label: 'Job Title',     width: 'w-32' },
   { key: 'opco',          label: 'OPCO',          width: 'w-28' },
   { key: 'persona',       label: 'Persona',       width: 'w-24' },
+  { key: 'query_language', label: 'Query Language', width: 'w-28' },
   { key: 'date_and_time', label: 'Date & Time',   width: 'w-36' },
   { key: 'query',         label: 'Query',         width: 'w-48' },
   { key: 'ai_response',   label: 'AI Response',   width: 'w-64' },

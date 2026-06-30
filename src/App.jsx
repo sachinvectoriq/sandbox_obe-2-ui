@@ -1,14 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import GlobalToastContainer from './components/GlobalToastContainer';
 
 function App() {
-  return (
-    <>
-      <Outlet /> 
-      <GlobalToastContainer />
-    </>
-  );
-  
+  return <Outlet />;
 }
 
 export default App;

@@ -85,26 +85,35 @@ const ReportAccessManagement = () => {
     }
   };
 
-  // ⚠️ NOTE: No DELETE endpoint exists in the current API spec.
-  // This is a placeholder — wire up to the real endpoint once it's available.
-  const handleDeleteUser = async (id, userName) => {
-    if (!window.confirm(`Are you sure you want to revoke report access for ${userName}?`)) {
-      return;
-    }
+  const handleDeleteUser = async (id, userName, userMail) => {
+  if (!window.confirm(`Are you sure you want to revoke report access for ${userName}?`)) {
+    return;
+  }
 
-    setDeletingId(id);
-    setError(null);
+  setDeletingId(id);
+  setError(null);
 
-    try {
-      // TODO: Replace with actual DELETE endpoint when available, e.g.:
-      // await apiClient.delete(`/api/report-access/${id}`);
-      throw new Error('Delete endpoint not yet available. Please contact the API team.');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setDeletingId(null);
-    }
-  };
+  try {
+    await apiClient.delete('/api/report-access/delete', {
+      data: {
+        user_name: userName,
+        user_mail: userMail,
+      },
+    });
+
+    setSuccess(`Access revoked for ${userName}`);
+    await fetchAccessUsers(); // refresh the list
+    setTimeout(() => setSuccess(null), 3000);
+  } catch (err) {
+    const apiError = err.response?.data?.detail?.[0]?.msg
+      || err.response?.data?.message
+      || err.message
+      || 'Failed to delete user';
+    setError(apiError);
+  } finally {
+    setDeletingId(null);
+  }
+};
 
   const formatDate = (dateString) => {
     if (!dateString) return '—';
@@ -212,7 +221,7 @@ const ReportAccessManagement = () => {
                     </td>
                     <td className="py-4 px-5 text-center">
                       <button
-                        onClick={() => handleDeleteUser(user.id, user.user_name || user.name)}
+                        onClick={() => handleDeleteUser(user.id, user.user_name || user.name, user.user_mail || user.email)}
                         disabled={deletingId === user.id}
                         className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors disabled:opacity-50 inline-flex items-center justify-center"
                         title="Revoke Access"

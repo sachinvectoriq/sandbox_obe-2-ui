@@ -4,26 +4,27 @@ import { ChevronDown, X } from 'lucide-react';
 import { setFilters } from '../app/features/chat/chatSlice';
 
 const OPCO_OPTIONS = [
-  { key: "actalent",                  text: "Actalent" },
-  { key: "actalentservices",          text: "Actalent Services" },
-  { key: "aerotek",                   text: "Aerotek" },
-  { key: "aerotekservices",           text: "Aerotek Services" },
-  { key: "astoncarter",               text: "Aston Carter" },
-  { key: "teksystems",                text: "TEKsystems" },
-  { key: "teksystemsglobalservices",  text: "TEKsystems Global Services" },
-  { key: "allegiscorporateservices",  text: "Allegis Corporate Services" },
+  { key: "tektgsna", text: "TEK/TGS NA" },
+  { key: "acs", text: "ACS" },
 ];
 
 const PERSONA_OPTIONS = [
-  { key: "fsg",                    text: "FSG" },
-  { key: "cls",                    text: "CLS" },
-  { key: "salesandrecruiting",     text: "Sales and Recruiting" },
-  { key: "deliveryandtaservices",  text: "Delivery and TA Services" },
-  { key: "frontoffice",            text: "Front Office" },
-  { key: "backoffice",             text: "Back Office" },
-  { key: "corporateservices",      text: "Corporate Services" },
-  { key: "talent",                 text: "Talent" },
+  { key: "tektalentdeliverymspleadomem", text: "TEK Talent Delivery/MSP Lead/OM/EM" },
+  { key: "tgsrecruiter", text: "TGS Recruiter" },
+  { key: "tgsdelivery", text: "TGS Delivery" },
+  { key: "teksalesmspdirectors", text: "TEK Sales/MSP Directors" },
+  { key: "tgssales", text: "TGS Sales" },
+  { key: "accountingoperations", text: "Accounting Operations" },
+  { key: "backoffice", text: "Back Office" },
+  { key: "corporate", text: "Corporate" },
+  { key: "fieldsupportgroup", text: "Field Support Group" },
+  { key: "frontoffice", text: "Front Office" },
+  { key: "operationalriskcompliance", text: "Operational Risk & Compliance" },
+  { key: "externalusers", text: "External Users" },
+  { key: "employeeselfservice", text: "Employee Self-Service" },
+  { key: "supervisormanagerleaderselfservice", text: "Supervisor/Manager/Leader Self-Service" },
 ];
+
 
 // ── Reusable single-select Dropup ────────────────────────────────────────────
 const Dropup = ({
@@ -125,11 +126,15 @@ const Dropup = ({
 const FilterBar = () => {
   const dispatch       = useDispatch();
   const currentFilters = useSelector((state) => state.chat.filters);
+  const selectedLanguage = useSelector((state) => state.chat.selectedLanguage); //  ADD
+
 
   const [isOpcoOpen,    setIsOpcoOpen]    = useState(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState(false);
   const opcoRef    = useRef(null);
   const personaRef = useRef(null);
+
+  
 
   // Close dropups when clicking outside
   useEffect(() => {
@@ -140,6 +145,9 @@ const FilterBar = () => {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // ADD — hide entire FilterBar when French
+  if (selectedLanguage === 'fr') return null;
 
   // ✅ Single-select: store as a single string key (or '' for none)
   const selectedOpco    = currentFilters.opco_values?.[0]    ?? '';
