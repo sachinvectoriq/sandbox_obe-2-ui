@@ -70,7 +70,7 @@ const PERSONA_MAP = {
   corporate: "Corporate",
   fieldsupportgroup: "Field Support Group",
   frontoffice: "Front Office",
-  operationalriskcompliance: "Operational Risk & Compliance",
+  "operationalrisk&compliance": "Operational Risk & Compliance",
   externalusers: "External Users",
   employeeselfservice: "Employee Self-Service",
   supervisormanagerleaderselfservice:

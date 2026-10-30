@@ -1,5 +1,6 @@
 //src\hooks\useAuth.js
 import { useSelector, useDispatch } from 'react-redux';
+import { authSession } from '../services/authSession';
 import {
   login,
   logout,
@@ -53,11 +54,12 @@ const useAuth = () => {
     localStorage.setItem('group', JSON.stringify(enrichedUser.group || ''));
     localStorage.setItem('email', JSON.stringify(enrichedUser.email || ''));
     localStorage.setItem('job_title', JSON.stringify(enrichedUser.job_title || ''));
-    localStorage.setItem('token', enrichedUser.token || '');
+    authSession.setToken(enrichedUser.token || null);
     // ✅ REMOVED login_session_id from here — storeLoginSessionId() handles it correctly
   };
 
   const logoutUser = () => {
+    authSession.clear();
     dispatch(logout());
     localStorage.clear();
   };
@@ -69,12 +71,12 @@ const useAuth = () => {
 
   const updateToken = (newToken) => {
     dispatch(setToken(newToken));
-    localStorage.setItem('token', newToken);
+    authSession.setToken(newToken);
   };
 
   const clearToken = () => {
     dispatch(removeToken());
-    localStorage.removeItem('token');
+    authSession.clear();
   };
 
   return {

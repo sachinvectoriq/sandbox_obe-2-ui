@@ -1,13 +1,16 @@
 import axios from 'axios';
+import { API_BASE, authSession } from './authSession';
+import { installSessionInterceptors } from './apiInterceptors';
 
 const apiClient = axios.create({
-  baseURL:
-    import.meta.env.VITE_API || 'https://app-ka-sandbox-001.azurewebsites.net/',
+  baseURL: API_BASE,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
   },
 });
+
+installSessionInterceptors(apiClient, authSession);
+
 
 export default apiClient;

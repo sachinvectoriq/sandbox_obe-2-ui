@@ -1,18 +1,24 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { isTokenValid } from '../utils/isTokenValid';
 
 const ProtectedRoute = ({ children, requireReportsAccess = false }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
-  // ✅ Works with both SSO and hardcoded users
+  if (!token || !isTokenValid(token)) {
+    return <Navigate to="/" replace />;
+  }
+
   const group = user?.group || JSON.parse(localStorage.getItem("group") || '""');
   const hasAccess = JSON.parse(localStorage.getItem("hasReportAccess") || "false");
 
-  // Admins always have access
+  if (!group) {
+    return <Navigate to="/" replace />;
+  }
+
   if (group === "admin") return children;
 
-  // Report route protection
   if (requireReportsAccess && !hasAccess) {
     return <Navigate to="/home" replace />;
   }

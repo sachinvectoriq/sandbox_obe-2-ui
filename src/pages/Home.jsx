@@ -38,6 +38,7 @@ const Home = () => {
     <div id='main_app'>
       <Header />
 
+
       <div className={`flex gap-4 w-full max-w-[1400px] mx-auto px-4`}>
         <motion.div
           id='chat_layout_wrapper'

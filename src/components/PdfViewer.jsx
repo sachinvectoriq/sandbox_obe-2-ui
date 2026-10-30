@@ -7,6 +7,7 @@ const PdfViewer = ({ url, onClose }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [viewerFailed, setViewerFailed] = useState(false);
   const selectedLanguage = useSelector((state) => state.chat.selectedLanguage);
+  const [showNotice, setShowNotice] = useState(true);
 
   // Language-based text content
   const getText = (key) => {
@@ -198,19 +199,41 @@ const PdfViewer = ({ url, onClose }) => {
               />
             </button>
           )}
-          {url && (
+           {/*{url && (
             <button onClick={handleDownload} title={getText('download')}>
               <FiDownload
                 size={18}
                 className='text-gray-600 hover:text-gray-800'
               />
             </button>
-          )}
+          )}*/}
           <button onClick={onClose} title={getText('close')}>
             <FiX size={20} className='text-gray-600 hover:text-gray-800' />
           </button>
         </div>
       </div>
+
+      {showNotice && (
+  <div className='mb-3 flex items-start justify-between rounded-md border border-amber-200 bg-amber-50 px-3 py-2'>
+    <div className='pr-3'>
+      <p className='text-xs font-semibold text-amber-700'>
+        IMPORTANT: Do not download documents.
+      </p>
+
+      <p className='text-xs text-amber-600'>
+        Downloaded copies do not receive updates, and information may become outdated or inaccurate.
+      </p>
+    </div>
+
+    <button
+      onClick={() => setShowNotice(false)}
+      className='text-amber-700 hover:text-amber-900 transition-colors'
+      title='Dismiss'
+    >
+      <FiX size={14} />
+    </button>
+  </div>
+)}
 
       <div className='flex-1 relative'>
         {isLoading && !hasError && (

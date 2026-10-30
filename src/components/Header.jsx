@@ -5,9 +5,7 @@ import useAuth from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import axios from "axios";
-
-const API_BASE = 'https://app-ka-sandbox-001.azurewebsites.net';
+import apiClient from '../services/apiClient';
 
 const Header = () => {
   const { logoutUser, user } = useAuth();
@@ -27,8 +25,8 @@ const Header = () => {
   const getText = (key) => {
     const translations = {
       title: {
-        en: 'Sandbox',
-        fr: 'Sandbox'
+        en: 'Evolve Knowledge Assistant',
+        fr: 'Assistant de Connaissances Evolve'
       },
       home: {
         en: 'Home',
@@ -53,6 +51,11 @@ const Header = () => {
       reports: {
         en: 'Reports',
         fr: 'Rapports'
+      },
+
+      personaCategories: {
+        en: 'Persona Categories',
+        fr: 'Catégories de Personas'
       }
     };
     return translations[key][selectedLanguage] || translations[key]['en'];
@@ -78,13 +81,11 @@ const Header = () => {
     }
 
     try {
-      const response = await axios.get(`${API_BASE}/get_reports_access`, {
-        params: { limit: 100 },
-      });
+      const response = await apiClient.get('/api/report-access/all');
 
-      const accessList = response.data.records || [];
+      const accessList = response.data.data || [];
       const allowed = accessList.some(
-        (u) => u.email?.toLowerCase() === emailToCheck.toLowerCase()
+        (u) => u.user_mail?.toLowerCase() === emailToCheck.toLowerCase()
       );
 
       setHasReportAccess(allowed);
@@ -139,6 +140,14 @@ const Header = () => {
     setHelpOpen(false);
   };
 
+  const goToPersonaCategories = () => {
+  window.open(
+    'https://allegiscloud-my.sharepoint.com/shared?listurl=https%3A%2F%2Fallegiscloud%2Dmy%2Esharepoint%2Ecom%2Fpersonal%2Fagall%5Fallegisgroup%5Fcom%2FDocuments&id=%2Fpersonal%2Fagall%5Fallegisgroup%5Fcom%2FDocuments%2FDownloads%2FTEK%20Evolve%20KA%20Personas%2Epdf&parent=%2Fpersonal%2Fagall%5Fallegisgroup%5Fcom%2FDocuments%2FDownloads&shareLink=1&ga=1',
+    '_blank'
+  );
+  setHelpOpen(false);
+};
+
   const handleMouseEnter = () => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     setHelpOpen(true);
@@ -158,7 +167,7 @@ const Header = () => {
 
         <div className="flex items-center gap-4">
           {/* Settings Button (Admins only) */}
-          {/*{user?.group === 'admin' && (
+          {user?.group === 'admin' && (
             <button
               onClick={handleNavToggle}
               className="border border-gray-100 bg-gray-100 font-semibold hover:border-[#174a7e] text-[#174a7e] p-2 px-4 rounded-md flex items-center gap-2 transition-colors"
@@ -166,10 +175,10 @@ const Header = () => {
               {isSettingsPage ? <Home size={18} /> : <Settings size={18} />}
               {isSettingsPage ? getText('home') : getText('settings')}
             </button>
-          )}*/}
+          )}
 
           {/* Reports Button (Admins + Users with access) */}
-          {/*{hasReportAccess && (
+          {hasReportAccess && (
             <button
               onClick={handleReportsToggle}
               className="border border-gray-100 bg-gray-100 font-semibold hover:border-[#174a7e] text-[#174a7e] p-2 px-4 rounded-md flex items-center gap-2 transition-colors"
@@ -177,7 +186,7 @@ const Header = () => {
               {isReportsPage ? <Home size={18} /> : <BarChart3 size={18} />}
               {isReportsPage ? getText('home') : getText('reports')}
             </button>
-          )}*/}
+          )}
 
           {/* Help Dropdown */}
           <div
@@ -193,15 +202,22 @@ const Header = () => {
               {getText('help')}
             </button>
             {helpOpen && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-white shadow-lg rounded-lg border border-gray-200 z-50 py-2">
-                <button
-                  onClick={goToQuickTour}
-                  className="block w-full text-left px-4 py-3 text-[#174a7e] hover:bg-gray-200 transition-colors text-sm font-medium"
-                >
-                  {getText('quickTour')}
-                </button>
-              </div>
-            )}
+  <div className="absolute top-full left-0 mt-1 w-56 bg-white shadow-lg rounded-lg border border-gray-200 z-50 py-2">
+    <button
+      onClick={goToQuickTour}
+      className="block w-full text-left px-4 py-3 text-[#174a7e] hover:bg-gray-200 transition-colors text-sm font-medium"
+    >
+      {getText('quickTour')}
+    </button>
+
+   <button
+      onClick={goToPersonaCategories}
+      className="block w-full text-left px-4 py-3 text-[#174a7e] hover:bg-gray-200 transition-colors text-sm font-medium"
+    >
+      {getText('personaCategories')}
+    </button>
+  </div>
+)}
           </div>
 
           {/* User Display */}

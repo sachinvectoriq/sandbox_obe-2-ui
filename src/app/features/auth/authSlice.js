@@ -12,6 +12,7 @@ const parseJSON = (value) => {
 const initialState = {
   user: {
     name: parseJSON(localStorage.getItem("name")) || null,
+    email: parseJSON(localStorage.getItem("email")) || null,
     group: parseJSON(localStorage.getItem("group")) || null,
     job_title: parseJSON(localStorage.getItem("job_title")) || null,
   },
@@ -31,12 +32,14 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.login_session_id = null;
     },
     //storeSessionId: (state, action) => {
      // state.session_id = action.payload;
     //},
     setToken: (state, action) => {
       state.token = action.payload;
+      if (state.user?.token) state.user.token = action.payload;
     },
     removeToken: (state) => {
       state.token = null;

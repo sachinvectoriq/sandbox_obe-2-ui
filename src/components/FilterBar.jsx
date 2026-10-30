@@ -19,7 +19,7 @@ const PERSONA_OPTIONS = [
   { key: "corporate", text: "Corporate" },
   { key: "fieldsupportgroup", text: "Field Support Group" },
   { key: "frontoffice", text: "Front Office" },
-  { key: "operationalriskcompliance", text: "Operational Risk & Compliance" },
+  { key: "operationalrisk&compliance", text: "Operational Risk & Compliance" },
   { key: "externalusers", text: "External Users" },
   { key: "employeeselfservice", text: "Employee Self-Service" },
   { key: "supervisormanagerleaderselfservice", text: "Supervisor/Manager/Leader Self-Service" },
