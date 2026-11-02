@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiDownload, FiExternalLink, FiX } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
-const PdfViewer = ({ url, onClose }) => {
+const PdfViewer = ({ url, pageNumber, onClose }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [viewerFailed, setViewerFailed] = useState(false);
   const selectedLanguage = useSelector((state) => state.chat.selectedLanguage);
   const [showNotice, setShowNotice] = useState(true);
+
+  useEffect(() => {
+    setHasError(false);
+    setIsLoading(true);
+    setViewerFailed(false);
+  }, [url, pageNumber]);
 
   // Language-based text content
   const getText = (key) => {
@@ -95,7 +101,7 @@ const PdfViewer = ({ url, onClose }) => {
         '.$1'
       );
       return queryString ? `${cleanedBase}?${queryString}` : cleanedBase;
-    } catch (e) {
+    } catch {
       return rawUrl;
     }
   };
@@ -111,16 +117,23 @@ const PdfViewer = ({ url, onClose }) => {
     const fileExtension = baseUrl.split('.').pop().toLowerCase();
 
     switch (fileExtension) {
-      case 'pdf':
+      case 'pdf': {
+        const requestedPage = Number(pageNumber);
+        const pdfUrl =
+          Number.isInteger(requestedPage) && requestedPage > 0
+            ? `${cleanedUrl.replace(/#.*$/, '')}#page=${requestedPage}`
+            : cleanedUrl;
         return (
           <iframe
-            src={cleanedUrl}
+            key={pdfUrl}
+            src={pdfUrl}
             title='PDF Viewer'
             className='w-full h-full border-0 rounded-md'
             onLoad={() => setIsLoading(false)}
             onError={() => setHasError(true)}
           />
         );
+      }
 
       case 'doc':
       case 'docx':

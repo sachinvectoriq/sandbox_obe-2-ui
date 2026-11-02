@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
   removePreviewDocURL,
-  setPreviewDocURL,
 } from '../app/features/chat/chatSlice';
 import WelcomeScreen from '../components/Welcomescreen';
 import ChatForm from '../components/ChatForm';
@@ -20,11 +19,7 @@ const Home = () => {
   const navigate = useNavigate();
   const messages = useSelector((state) => state.chat.messages);
   const showWelcome = messages.length === 0;
-  const { previewDocURL } = useSelector((state) => state.chat);
-
-  const handleViewPdf = (url) => {
-    dispatch(setPreviewDocURL({ url }));
-  };
+  const { previewDocURL, previewPageNumber } = useSelector((state) => state.chat);
 
   
 
@@ -55,7 +50,7 @@ const Home = () => {
             <div className='flex h-[85vh] flex-col bg-[#f3f5f8] rounded-md border border-gray-200'>
   <div className={`flex h-full flex-col pt-4 transition-all duration-300`}>
     <ChatLayout>
-      <ChatContent onViewPdf={handleViewPdf} />
+      <ChatContent />
     </ChatLayout>
     <div className='flex w-full mt-4 justify-center items-center absolute bottom-2'>
       <ChatForm />
@@ -76,6 +71,7 @@ const Home = () => {
           >
             <PdfViewer
               url={previewDocURL}
+              pageNumber={previewPageNumber}
               onClose={() => dispatch(removePreviewDocURL())}
             />
           </motion.div>
