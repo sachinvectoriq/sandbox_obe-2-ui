@@ -436,6 +436,7 @@ const initialState = {
   userId: getUserId(),
   filters: getFilters(), // ← OPCO + Persona filters
   previewDocURL: null,
+  previewPageNumber: null,
   selectedLanguage: getSelectedLanguage(), // ← EN/FR
 };
 
@@ -449,9 +450,11 @@ const chatSlice = createSlice({
     },
     setPreviewDocURL: (state, action) => {
       state.previewDocURL = action.payload.url;
+      state.previewPageNumber = action.payload.pageNumber ?? null;
     },
     removePreviewDocURL: (state) => {
       state.previewDocURL = null;
+      state.previewPageNumber = null;
     },
 
     addMessage: (state, action) => {

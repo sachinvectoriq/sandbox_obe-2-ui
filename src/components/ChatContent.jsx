@@ -404,11 +404,14 @@ const showToast = (message, type = 'success') => {
         }));
     };
 
-    const handleCitationClick = (source) => {
-        if (onViewPdf && source) onViewPdf(source);
+    const handleCitationClick = (citation) => {
+        const source = citation?.parent_id || citation?._metadata?.blob_url;
+        if (onViewPdf && source) {
+            onViewPdf(source, citation._metadata?.page_number);
+        }
     };
 
-    const handleInlineCitationClick = (event, messageId) => {
+    const handleInlineCitationClick = (event, messageId, citationsMap) => {
         const target = event.target;
         if (target.tagName === 'SUP' && target.classList.contains('citation-ref')) {
             const citationId = parseInt(target.dataset.citationId);
@@ -422,6 +425,7 @@ const showToast = (message, type = 'success') => {
                     citationElement.style.backgroundColor = '';
                 }, 1500);
             }
+            handleCitationClick(citationsMap.get(citationId));
         }
     };
 
@@ -703,7 +707,9 @@ const showToast = (message, type = 'success') => {
                                                 citationsMap
                                             ),
                                         }}
-                                        onClick={(e) => handleInlineCitationClick(e, message.id)}
+                                        onClick={(e) =>
+                                            handleInlineCitationClick(e, message.id, citationsMap)
+                                        }
                                     />
                                 )}
                             </div>
@@ -727,7 +733,7 @@ const showToast = (message, type = 'success') => {
                                                         </span>
                                                         <button
                                                             onClick={() =>
-                                                                handleCitationClick(citation.parent_id)
+                                                                handleCitationClick(citation)
                                                             }
                                                             className='text-blue-600 hover:underline text-sm flex-grow text-left cursor-pointer'
                                                         >

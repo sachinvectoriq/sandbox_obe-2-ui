@@ -8,8 +8,8 @@ const ChatLayout = ({ children }) => {
   const { previewDocURL } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
 
-  const handleViewPdf = (url) => {
-    dispatch(setPreviewDocURL({ url }));
+  const handleViewPdf = (url, pageNumber) => {
+    dispatch(setPreviewDocURL({ url, pageNumber }));
   };
 
   return (
