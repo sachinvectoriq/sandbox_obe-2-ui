@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Header from '../components/Header';
 import apiClient from '../services/apiClient'; 
+import { fetchAllReportRows } from '../services/reportExport';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -109,7 +110,9 @@ const Report = () => {
   const [tableData,    setTableData]    = useState([]);
   const [distinctUsers, setDistinctUsers] = useState([]);
   const [loading,      setLoading]      = useState(false);
+  const [exporting,    setExporting]    = useState(false);
   const [error,        setError]        = useState(null);
+  const [appliedFilters, setAppliedFilters] = useState(null);
 
   // ── Server-side pagination ────────────────────────────────────────────────
   const [offset,   setOffset]   = useState(0);
@@ -144,13 +147,16 @@ const Report = () => {
       if (!fromDate || !toDate) throw new Error('Please select both start and end dates');
       if (new Date(fromDate) > new Date(toDate)) throw new Error('Start date cannot be after end date');
 
-      const params = buildParams({
+      const filters = {
         start_date: fromDate,
         end_date:   toDate,
         user_name:  selectedUser         || undefined,
         persona:    selectedPersona      || undefined,
         opco:       selectedOpco         || undefined,
         feedback_type: selectedFeedbackType || undefined,
+      };
+      const params = buildParams({
+        ...filters,
         limit:      ITEMS_PER_PAGE,
         offset:     newOffset,
       });
@@ -161,12 +167,16 @@ const Report = () => {
       const rows = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
       setTableData((prev) => (newOffset === 0 ? rows : [...prev, ...rows]));
-      setHasMore(rows.length === ITEMS_PER_PAGE);
+      setHasMore(res.data?.has_more ?? rows.length === ITEMS_PER_PAGE);
       setOffset(newOffset);
+      if (newOffset === 0) setAppliedFilters(filters);
     } catch (err) {
       const msg = err?.response?.data?.detail?.[0]?.msg || err.message || 'Failed to load data';
       setError(msg);
-      if (newOffset === 0) setTableData([]);
+      if (newOffset === 0) {
+        setTableData([]);
+        setAppliedFilters(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -198,23 +208,28 @@ const Report = () => {
     // trigger it via a slight delay after state settles, OR just let user
     // click Apply. For UX convenience we call it directly with defaults:
     setTableData([]);
+    setAppliedFilters(null);
     setError(null);
     // Note: Because useState setters are async, we call fetch with explicit
     // defaults here rather than relying on updated state:
     (async () => {
       setLoading(true);
       try {
-        const params = buildParams({
+        const filters = {
           start_date: minus30Str(),
           end_date:   todayStr(),
+        };
+        const params = buildParams({
+          ...filters,
           limit:      ITEMS_PER_PAGE,
           offset:     0,
         });
         const res = await apiClient.get(`/api/audit-report/combined-report?${params}`);
         const rows = Array.isArray(res.data) ? res.data : res.data?.data || [];
         setTableData(rows);
-        setHasMore(rows.length === ITEMS_PER_PAGE);
+        setHasMore(res.data?.has_more ?? rows.length === ITEMS_PER_PAGE);
         setOffset(0);
+        setAppliedFilters(filters);
       } catch (err) {
         setError(err?.response?.data?.detail?.[0]?.msg || err.message || 'Failed to load data');
       } finally {
@@ -238,27 +253,45 @@ const Report = () => {
   }, [searchTerm, tableData]);
 
   // ── Export visible rows to CSV ────────────────────────────────────────────
-  const handleExport = () => {
-    if (displayData.length === 0) { alert('No data to export'); return; }
-    const header = LOG_COLUMNS.map((c) => c.label).join(',');
-    const rows   = displayData.map((row) =>
-      LOG_COLUMNS.map((c) => {
-        const v = String(row[c.key] ?? '').replace(/"/g, '""').replace(/\n/g, ' ');
-        return `"${v}"`;
-      }).join(',')
-    );
-    const csv  = [header, ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = Object.assign(document.createElement('a'), {
-      href: url,
-      download: `report_${todayStr()}.csv`,
-      style: 'visibility:hidden',
-    });
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleExport = async () => {
+    if (!appliedFilters) { alert('Apply filters before exporting'); return; }
+    setExporting(true);
+    setError(null);
+
+    try {
+      const allRows = await fetchAllReportRows(apiClient, appliedFilters, ITEMS_PER_PAGE);
+      const q = searchTerm.trim().toLowerCase();
+      const exportRows = q
+        ? allRows.filter((row) => Object.values(row).some(
+            (value) => value && String(value).toLowerCase().includes(q)
+          ))
+        : allRows;
+
+      if (exportRows.length === 0) { alert('No data to export'); return; }
+      const header = LOG_COLUMNS.map((c) => c.label).join(',');
+      const rows = exportRows.map((row) =>
+        LOG_COLUMNS.map((c) => {
+          const v = String(row[c.key] ?? '').replace(/"/g, '""').replace(/\n/g, ' ');
+          return `"${v}"`;
+        }).join(',')
+      );
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), {
+        href: url,
+        download: `report_${todayStr()}.csv`,
+        style: 'visibility:hidden',
+      });
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err?.response?.data?.detail || err.message || 'Failed to export data');
+    } finally {
+      setExporting(false);
+    }
   };
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -279,11 +312,11 @@ const Report = () => {
             </div>
             <button
               onClick={handleExport}
-              disabled={displayData.length === 0 || loading}
+              disabled={!appliedFilters || loading || exporting}
               className="flex items-center gap-2 px-5 py-2 bg-[#174a7e] text-white rounded-md text-sm hover:bg-[#082340] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <Download size={15} />
-              Export CSV
+              {exporting ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
+              {exporting ? 'Exporting…' : 'Export CSV'}
             </button>
           </div>
 
